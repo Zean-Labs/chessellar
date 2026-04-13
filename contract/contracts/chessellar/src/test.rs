@@ -14,5 +14,18 @@ fn test_create_and_join_game() {
     let player_white = Address::generate(&env);
     let player_black = Address::generate(&env);
 
-    // Initial creation logic will go here in the next commit
+    let wager = 1000;
+    let game_id = client.create_game(&player_white, &wager);
+
+    let game = client.get_game(&game_id);
+    assert_eq!(game.player_white, player_white);
+    assert_eq!(game.player_black, None);
+    assert_eq!(game.wager, wager);
+    assert_eq!(game.status, GameStatus::Open);
+
+    client.join_game(&player_black, &game_id);
+
+    let updated_game = client.get_game(&game_id);
+    assert_eq!(updated_game.player_black, Some(player_black));
+    assert_eq!(updated_game.status, GameStatus::InProgress);
 }
