@@ -44,5 +44,9 @@ fn test_submit_move() {
     let game_id = client.create_game(&player_white, &0);
     client.join_game(&player_black, &game_id);
 
-    // FEN update logic will follow in the next commit
+    let new_fen = String::from_str(&env, "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
+    client.submit_move(&player_white, &game_id, &new_fen);
+
+    let updated_game = client.get_game(&game_id);
+    assert_eq!(updated_game.fen, new_fen);
 }
