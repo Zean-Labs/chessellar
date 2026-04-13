@@ -29,3 +29,20 @@ fn test_create_and_join_game() {
     assert_eq!(updated_game.player_black, Some(player_black));
     assert_eq!(updated_game.status, GameStatus::InProgress);
 }
+
+#[test]
+fn test_submit_move() {
+    let env = Env::default();
+    env.mock_all_auths();
+
+    let contract_id = env.register_contract(None, ChessellarContract);
+    let client = ChessellarContractClient::new(&env, &contract_id);
+
+    let player_white = Address::generate(&env);
+    let player_black = Address::generate(&env);
+
+    let game_id = client.create_game(&player_white, &0);
+    client.join_game(&player_black, &game_id);
+
+    // FEN update logic will follow in the next commit
+}
